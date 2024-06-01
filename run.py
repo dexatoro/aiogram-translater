@@ -1,30 +1,34 @@
+import asyncio
 import logging
+from os import getenv
 
-from aiogram import Bot, Dispatcher, executor, types
+from aiogram import Bot, Dispatcher, html
+from aiogram.filters import CommandStart
+from aiogram.types import Message
 
-API_TOKEN = 'BOT TOKEN HERE'
+TOKEN = getenv("TOKEN")
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-
-# Initialize bot and dispatcher
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot)
+dp = Dispatcher()
 
 
-@dp.message_handler(commands=['start', 'help'])
-async def send_welcome(message: types.Message):
-    await message.reply("Hi!\nI'm EchoBot!\nPowered by aiogram.")
+@dp.message(CommandStart())
+async def command_start_handler(message: Message) -> None:
+    await message.answer(f"Hello, {message.from_user.full_name}!")
 
 
-
-@dp.message_handler()
-async def echo(message: types.Message):
-    await message.answer(message.text)
-
-
-if __name__ == '__main__':
+@dp.message()
+async def echo_handler(message: Message) -> None:
     try:
-        executor.start_polling(dp, skip_updates=True)
-    except KeyboardInterrupt:
-        print('exit')
+        await message.send_copy(chat_id=message.chat.id)
+    except TypeError:
+        await message.answer("Nice try!")
+
+
+async def main() -> None:
+    bot = Bot(token=TOKEN)
+    await dp.start_polling(bot)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    asyncio.run(main())
