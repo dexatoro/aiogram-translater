@@ -4,7 +4,7 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder
 languages = {'English🇬🇧':'en',
              'Русский🇷🇺':'ru', 
              'Deutsch🇩🇪':'de',
-             'Zhōngguó rén🇨🇳':'zh',
+             'Zhōngguó rén🇨🇳':'zh-CN',
              'Nihongo🇯🇵':'ja',
              'Español🇪🇸':'es',}
 
